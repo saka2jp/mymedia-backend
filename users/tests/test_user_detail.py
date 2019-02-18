@@ -15,7 +15,7 @@ AccessTokenModel = get_access_token_model()
 class TestUserDetail:
 
     def setup_method(self, method):
-        self.user = UserModel.objects.create_user('user', 'test@example.com', '123456')
+        self.user = UserModel.objects.create_user('test@example.com', '123456')
         self.app = ApplicationModel.objects.create(
             name='app',
             client_type=ApplicationModel.CLIENT_CONFIDENTIAL,
@@ -37,7 +37,7 @@ class TestUserDetail:
         }
         response = self.client.get(f'/users/{self.user.pk}/', **headers)
         assert response.status_code == status.HTTP_200_OK
-        assert response.json()['username'] == str(self.user)
+        assert response.json()['email'] == self.user.email
 
     def test_put_ok_case(self):
         """ OK: PUT /users/<int:pk>/ """
@@ -45,12 +45,12 @@ class TestUserDetail:
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
         body = {
-            'username': 'test',
+            'email': 'user@example.com',
             'password': 'password'
         }
         response = self.client.put(f'/users/{self.user.pk}/', body, format='json', **headers)
         assert response.status_code == status.HTTP_200_OK
-        assert response.json()['username'] == 'test'
+        assert response.json()['email'] == 'user@example.com'
 
     def test_patch_ok_case(self):
         """ OK: PATCH /users/<int:pk>/ """
@@ -58,11 +58,11 @@ class TestUserDetail:
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
         body = {
-            'username': 'test'
+            'email': 'user@example.com'
         }
         response = self.client.patch(f'/users/{self.user.pk}/', body, format='json', **headers)
         assert response.status_code == status.HTTP_200_OK
-        assert response.json()['username'] == 'test'
+        assert response.json()['email'] == 'user@example.com'
 
     def test_delete_ok_case(self):
         """ OK: DELETE /users/<int:pk>/ """
