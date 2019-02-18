@@ -8,6 +8,7 @@ black = "==18.9b0"
 pytest-cov = "~=2.6"
 pytest-django = "~=3.4"
 flake8-isort = "~=2.6"
+radon = "~=3.0"
 
 [packages]
 django = "~=2.1"
