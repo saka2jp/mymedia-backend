@@ -1,18 +1,17 @@
-from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope
-from rest_framework import generics, permissions, serializers
+from rest_framework import generics, permissions
 
-from django.contrib.auth.models import User, Group
+from django.contrib.auth import get_user_model
 
 from .serializers import UserSerializer
 
 
 class UserList(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
-    queryset = User.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
-    queryset = User.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = get_user_model().objects.all()
     serializer_class = UserSerializer

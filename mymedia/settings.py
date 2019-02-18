@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'rest_framework',
 
-   # Django apps
+    # Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
