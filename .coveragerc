@@ -1,0 +1,17 @@
+[run]
+branch = True
+source = .
+
+[report]
+ignore_errors = True
+omit =
+  */migrations/*
+  */__init__.py
+  */const.py
+  */tests.py
+  */tests/*
+  */apps.py
+  */manage.py
+  */wsgi.py
+  */*urls.py
+  */settings.py
