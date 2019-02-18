@@ -70,6 +70,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mymedia.wsgi.application'
 
+AUTH_USER_MODEL = 'users.User'
+
 
 # Database
 
