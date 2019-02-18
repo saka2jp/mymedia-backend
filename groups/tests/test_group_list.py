@@ -16,7 +16,7 @@ AccessTokenModel = get_access_token_model()
 class TestGroupList:
 
     def setup_method(self, method):
-        self.user = UserModel.objects.create_user('user', 'test@example.com', '123456')
+        self.user = UserModel.objects.create_user('test@example.com', '123456')
         self.app = ApplicationModel.objects.create(
             name='app',
             client_type=ApplicationModel.CLIENT_CONFIDENTIAL,

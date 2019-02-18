@@ -15,7 +15,7 @@ AccessTokenModel = get_access_token_model()
 class TestUserList:
 
     def setup_method(self, method):
-        self.user = UserModel.objects.create_user('user', 'test@example.com', '123456')
+        self.user = UserModel.objects.create_user('test@example.com', '123456')
         self.app = ApplicationModel.objects.create(
             name='app',
             client_type=ApplicationModel.CLIENT_CONFIDENTIAL,
@@ -37,7 +37,7 @@ class TestUserList:
         }
         response = self.client.get('/users/', **headers)
         assert response.status_code == status.HTTP_200_OK
-        assert response.json()[0]['username'] == str(self.user)
+        assert response.json()[0]['email'] == self.user.email
 
     def test_post_ok_case(self):
         """ OK: POST /users/ """
@@ -45,12 +45,12 @@ class TestUserList:
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
         body = {
-            'username': 'test',
+            'email': 'user@example.com',
             'password': 'password'
         }
         response = self.client.post('/users/', body, format='json', **headers)
         assert response.status_code == status.HTTP_201_CREATED
-        assert response.json()['username'] == 'test'
+        assert response.json()['email'] == 'user@example.com'
 
     def test_bad_request_case(self):
         """ Bad Request: POST /users/ """
