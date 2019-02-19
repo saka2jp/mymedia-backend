@@ -9,7 +9,7 @@ $ cp .env.example .env
 $ docker-compose up
 ```
 
-Your app should now be running on http://0.0.0.0:8000/polls/
+Your app should now be running on http://0.0.0.0:8000/
 
 A superuser is created automatically by Docker Compose.
 
@@ -20,7 +20,7 @@ A superuser is created automatically by Docker Compose.
 
 Deploying to Heroku
 ---
-1. Create [New tag](https://gitlab.com/jumpyoshim/django-polls/tags/new)
+1. Create [New tag](https://gitlab.com/my_media/backend/tags/new)
    - Tag naming rules conform to [Semantic Versioning](https://semver.org/)
 
 1. Execute deploy job with the tag you created
