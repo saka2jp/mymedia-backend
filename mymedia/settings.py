@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'groups.apps.GroupsConfig',
 
     # Third party apps
+    'drf_yasg',
     'oauth2_provider',
     'rest_framework',
 
