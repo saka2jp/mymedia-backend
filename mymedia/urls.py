@@ -30,4 +30,5 @@ urlpatterns = [
     path('oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('users/', include('users.urls')),
     path('groups/', include('groups.urls')),
+    path('blogs/', include('blogs.urls')),
 ]
