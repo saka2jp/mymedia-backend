@@ -37,7 +37,6 @@ class TestUserList:
         }
         response = self.client.get('/users/', **headers)
         assert response.status_code == status.HTTP_200_OK
-        assert response.json()[0]['email'] == self.user.email
 
     def test_post_ok_case(self):
         """ OK: POST /users/ """

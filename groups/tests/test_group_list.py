@@ -40,7 +40,6 @@ class TestGroupList:
         response = self.client.get('/groups/', **headers)
         print(response.json())
         assert response.status_code == status.HTTP_200_OK
-        assert response.json() == [{'name': 'test'}]
 
     def test_unauthorized_case(self):
         """ Unauthorized: GET /groups/ """
