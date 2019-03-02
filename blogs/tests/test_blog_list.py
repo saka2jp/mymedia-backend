@@ -30,6 +30,22 @@ class TestBlogList:
         )
         self.client = APIClient()
 
+    def test_get_ok_case(self):
+        """ OK: GET /blogs/ """
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
+        }
+        response = self.client.get('/blogs/', **headers)
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_get_unauthorized_case(self):
+        """ Unauthorized: GET /blogs/ """
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + 'badtoken',
+        }
+        response = self.client.get('/blogs/', **headers)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
     def test_post_ok_case(self):
         """ OK: POST /blogs/ """
         headers = {
