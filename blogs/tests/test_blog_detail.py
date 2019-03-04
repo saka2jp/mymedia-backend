@@ -7,7 +7,6 @@ from django.contrib.auth import get_user_model
 from django.utils.timezone import now, timedelta
 
 from ..factories import BlogFactory
-from ..models import Blog
 
 UserModel = get_user_model()
 ApplicationModel = get_application_model()
@@ -36,18 +35,18 @@ class TestBlogDetail:
             'title': 'Test',
             'url': 'https://example.com/test/',
             'thumbnail': 'https://example.com/thumbnail.jpg',
-            'start_dt': '2019-03-01T00:00',
-            'end_dt': '2019-03-31T00:00',
+            'start_dt': '2019-03-01T00:00:00+09:00',
+            'end_dt': '2019-03-31T00:00:00+09:00',
             'is_public': True
         }
 
     def test_get_ok_case(self):
         """ OK: GET /blogs/<int:pk>/ """
         blog = BlogFactory(**self.data)
-        print(Blog.objects.all())
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
+
         response = self.client.get(f'/blogs/{blog.pk}/', **headers)
         assert response.status_code == status.HTTP_200_OK
 
@@ -57,6 +56,7 @@ class TestBlogDetail:
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + 'badtoken',
         }
+
         response = self.client.get(f'/blogs/{blog.pk}/', **headers)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -65,5 +65,73 @@ class TestBlogDetail:
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
+
         response = self.client.get('/blogs/1/', **headers)
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_put_ok_case(self):
+        """ OK: PUT /blogs/<int:pk>/ """
+        blog = BlogFactory(**self.data)
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
+        }
+
+        self.data['title'] = 'Updated'
+        response = self.client.put(f'/blogs/{blog.pk}/', self.data, **headers)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json()['title'] == 'Updated'
+
+    def test_put_unauthorized_case(self):
+        """ Unauthorized: PUT /blogs/<int:pk>/ """
+        blog = BlogFactory(**self.data)
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + 'badtoken',
+        }
+
+        self.data['title'] = 'Updated'
+        response = self.client.put(f'/blogs/{blog.pk}/', self.data, **headers)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_put_not_found_case(self):
+        """ Not Found: PUT /blogs/<int:pk>/ """
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
+        }
+
+        self.data['title'] = 'Updated'
+        response = self.client.put('/blogs/1/', self.data, **headers)
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_patch_ok_case(self):
+        """ OK: PATCH /blogs/<int:pk>/ """
+        blog = BlogFactory(**self.data)
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
+        }
+
+        data = dict(title='Updated')
+        response = self.client.patch(f'/blogs/{blog.pk}/', data, **headers)
+        print(response.json())
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json()['title'] == 'Updated'
+
+    def test_patch_unauthorized_case(self):
+        """ Unauthorized: PATCH /blogs/<int:pk>/ """
+        blog = BlogFactory(**self.data)
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + 'badtoken',
+        }
+
+        data = dict(title='Updated')
+        response = self.client.patch(f'/blogs/{blog.pk}/', data, **headers)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_patch_not_found_case(self):
+        """ Not Found: PATCH /blogs/<int:pk>/ """
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
+        }
+
+        data = dict(title='Updated')
+        response = self.client.patch('/blogs/1/', data, **headers)
         assert response.status_code == status.HTTP_404_NOT_FOUND
