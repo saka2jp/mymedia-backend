@@ -1,0 +1,69 @@
+import pytest
+from oauth2_provider.models import get_access_token_model, get_application_model
+from rest_framework import status
+from rest_framework.test import APIClient
+
+from django.contrib.auth import get_user_model
+from django.utils.timezone import now, timedelta
+
+from ..factories import BlogFactory
+from ..models import Blog
+
+UserModel = get_user_model()
+ApplicationModel = get_application_model()
+AccessTokenModel = get_access_token_model()
+
+
+@pytest.mark.django_db
+class TestBlogDetail:
+
+    def setup_method(self, method):
+        self.user = UserModel.objects.create_user('test@example.com', '123456')
+        self.app = ApplicationModel.objects.create(
+            name='app',
+            client_type=ApplicationModel.CLIENT_CONFIDENTIAL,
+            authorization_grant_type=ApplicationModel.GRANT_CLIENT_CREDENTIALS,
+            user=self.user
+        )
+        self.token = AccessTokenModel.objects.create(
+            user=self.user,
+            token='lIN4xH5EU04HLM1NR1fFR9IHWTdWWM',
+            application=self.app,
+            expires=now()+timedelta(days=365)
+        )
+        self.client = APIClient()
+        self.data = {
+            'title': 'Test',
+            'url': 'https://example.com/test/',
+            'thumbnail': 'https://example.com/thumbnail.jpg',
+            'start_dt': '2019-03-01T00:00',
+            'end_dt': '2019-03-31T00:00',
+            'is_public': True
+        }
+
+    def test_get_ok_case(self):
+        """ OK: GET /blogs/<int:pk>/ """
+        blog = BlogFactory(**self.data)
+        print(Blog.objects.all())
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
+        }
+        response = self.client.get(f'/blogs/{blog.pk}/', **headers)
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_get_unauthorized_case(self):
+        """ Unauthorized: GET /blogs/<int:pk>/ """
+        blog = BlogFactory(**self.data)
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + 'badtoken',
+        }
+        response = self.client.get(f'/blogs/{blog.pk}/', **headers)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_get_not_found_case(self):
+        """ Not Found: GET /blogs/<int:pk>/ """
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
+        }
+        response = self.client.get('/blogs/1/', **headers)
+        assert response.status_code == status.HTTP_404_NOT_FOUND
