@@ -135,3 +135,32 @@ class TestBlogDetail:
         data = dict(title='Updated')
         response = self.client.patch('/blogs/1/', data, **headers)
         assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_delete_ok_case(self):
+        """ OK: DELETE /blogs/<int:pk>/ """
+        blog = BlogFactory(**self.data)
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
+        }
+
+        response = self.client.delete(f'/blogs/{blog.pk}/', **headers)
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+
+    def test_delete_unauthorized_case(self):
+        """ Unauthorized: DELETE /blogs/<int:pk>/ """
+        blog = BlogFactory(**self.data)
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + 'badtoken',
+        }
+
+        response = self.client.delete(f'/blogs/{blog.pk}/', **headers)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_delete_not_found_case(self):
+        """ Not Found: DELETE /blogs/<int:pk>/ """
+        headers = {
+            'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
+        }
+
+        response = self.client.get('/blogs/1/', **headers)
+        assert response.status_code == status.HTTP_404_NOT_FOUND
