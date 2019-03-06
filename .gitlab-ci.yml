@@ -28,6 +28,7 @@ build_for_tags:
   before_script:
     - pip install pipenv
     - pipenv install --system --dev
+    - cd mymedia
 
 pytest:
   <<: *test_definition
