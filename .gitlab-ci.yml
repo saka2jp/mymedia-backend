@@ -42,7 +42,9 @@ pytest:
     - export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
     - pytest --cov-report=html --tb=line
   after_script:
+    - ls -la
     - cd mymedia
+    - ls -la
     - mv htmlcov/ public/
   artifacts:
     paths:
