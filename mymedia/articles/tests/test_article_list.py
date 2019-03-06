@@ -43,7 +43,7 @@ class TestArticleList:
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
-        response = self.client.get('/blogs/?is_public=true', **headers)
+        response = self.client.get('/articles/?is_public=true', **headers)
         assert response.status_code == status.HTTP_200_OK
 
     def test_get_unauthorized_case(self):
