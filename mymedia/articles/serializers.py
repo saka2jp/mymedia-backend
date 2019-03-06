@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from .models import Blog
+from .models import Article
 
 
-class BlogSerializer(serializers.ModelSerializer):
+class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Blog
+        model = Article
         fields = ('id', 'title', 'thumbnail', 'start_dt', 'end_dt', 'is_public', 'created_at', 'updated_at')
         read_only_fields = ('created_at', 'updated_at')

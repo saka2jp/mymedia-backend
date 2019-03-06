@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     # Local apps
     'users.apps.UsersConfig',
     'groups.apps.GroupsConfig',
-    'blogs.apps.BlogsConfig',
+    'articles.apps.ArticlesConfig',
 
     # Third party apps
     'drf_yasg',
