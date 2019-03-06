@@ -6,7 +6,7 @@ from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now, timedelta
 
-from ..factories import BlogFactory
+from ..factories import ArticleFactory
 
 UserModel = get_user_model()
 ApplicationModel = get_application_model()
@@ -14,7 +14,7 @@ AccessTokenModel = get_access_token_model()
 
 
 @pytest.mark.django_db
-class TestBlogDetail:
+class TestArticleDetail:
 
     def setup_method(self, method):
         self.user = UserModel.objects.create_user('test@example.com', '123456')
@@ -41,126 +41,126 @@ class TestBlogDetail:
         }
 
     def test_get_ok_case(self):
-        """ OK: GET /blogs/<int:pk>/ """
-        blog = BlogFactory(**self.data)
+        """ OK: GET /articles/<int:pk>/ """
+        article = ArticleFactory(**self.data)
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
 
-        response = self.client.get(f'/blogs/{blog.pk}/', **headers)
+        response = self.client.get(f'/articles/{article.pk}/', **headers)
         assert response.status_code == status.HTTP_200_OK
 
     def test_get_unauthorized_case(self):
-        """ Unauthorized: GET /blogs/<int:pk>/ """
-        blog = BlogFactory(**self.data)
+        """ Unauthorized: GET /articles/<int:pk>/ """
+        article = ArticleFactory(**self.data)
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + 'badtoken',
         }
 
-        response = self.client.get(f'/blogs/{blog.pk}/', **headers)
+        response = self.client.get(f'/articles/{article.pk}/', **headers)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_get_not_found_case(self):
-        """ Not Found: GET /blogs/<int:pk>/ """
+        """ Not Found: GET /articles/<int:pk>/ """
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
 
-        response = self.client.get('/blogs/1/', **headers)
+        response = self.client.get('/articles/1/', **headers)
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
     def test_put_ok_case(self):
-        """ OK: PUT /blogs/<int:pk>/ """
-        blog = BlogFactory(**self.data)
+        """ OK: PUT /articles/<int:pk>/ """
+        article = ArticleFactory(**self.data)
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
 
         self.data['title'] = 'Updated'
-        response = self.client.put(f'/blogs/{blog.pk}/', self.data, **headers)
+        response = self.client.put(f'/articles/{article.pk}/', self.data, **headers)
         assert response.status_code == status.HTTP_200_OK
         assert response.json()['title'] == 'Updated'
 
     def test_put_unauthorized_case(self):
-        """ Unauthorized: PUT /blogs/<int:pk>/ """
-        blog = BlogFactory(**self.data)
+        """ Unauthorized: PUT /articles/<int:pk>/ """
+        article = ArticleFactory(**self.data)
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + 'badtoken',
         }
 
         self.data['title'] = 'Updated'
-        response = self.client.put(f'/blogs/{blog.pk}/', self.data, **headers)
+        response = self.client.put(f'/articles/{article.pk}/', self.data, **headers)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_put_not_found_case(self):
-        """ Not Found: PUT /blogs/<int:pk>/ """
+        """ Not Found: PUT /articles/<int:pk>/ """
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
 
         self.data['title'] = 'Updated'
-        response = self.client.put('/blogs/1/', self.data, **headers)
+        response = self.client.put('/articles/1/', self.data, **headers)
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
     def test_patch_ok_case(self):
-        """ OK: PATCH /blogs/<int:pk>/ """
-        blog = BlogFactory(**self.data)
+        """ OK: PATCH /articles/<int:pk>/ """
+        article = ArticleFactory(**self.data)
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
 
         data = dict(title='Updated')
-        response = self.client.patch(f'/blogs/{blog.pk}/', data, **headers)
+        response = self.client.patch(f'/articles/{article.pk}/', data, **headers)
         print(response.json())
         assert response.status_code == status.HTTP_200_OK
         assert response.json()['title'] == 'Updated'
 
     def test_patch_unauthorized_case(self):
-        """ Unauthorized: PATCH /blogs/<int:pk>/ """
-        blog = BlogFactory(**self.data)
+        """ Unauthorized: PATCH /articles/<int:pk>/ """
+        article = ArticleFactory(**self.data)
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + 'badtoken',
         }
 
         data = dict(title='Updated')
-        response = self.client.patch(f'/blogs/{blog.pk}/', data, **headers)
+        response = self.client.patch(f'/articles/{article.pk}/', data, **headers)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_patch_not_found_case(self):
-        """ Not Found: PATCH /blogs/<int:pk>/ """
+        """ Not Found: PATCH /articles/<int:pk>/ """
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
 
         data = dict(title='Updated')
-        response = self.client.patch('/blogs/1/', data, **headers)
+        response = self.client.patch('/articles/1/', data, **headers)
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
     def test_delete_ok_case(self):
-        """ OK: DELETE /blogs/<int:pk>/ """
-        blog = BlogFactory(**self.data)
+        """ OK: DELETE /articles/<int:pk>/ """
+        article = ArticleFactory(**self.data)
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
 
-        response = self.client.delete(f'/blogs/{blog.pk}/', **headers)
+        response = self.client.delete(f'/articles/{article.pk}/', **headers)
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
     def test_delete_unauthorized_case(self):
-        """ Unauthorized: DELETE /blogs/<int:pk>/ """
-        blog = BlogFactory(**self.data)
+        """ Unauthorized: DELETE /articles/<int:pk>/ """
+        article = ArticleFactory(**self.data)
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + 'badtoken',
         }
 
-        response = self.client.delete(f'/blogs/{blog.pk}/', **headers)
+        response = self.client.delete(f'/articles/{article.pk}/', **headers)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_delete_not_found_case(self):
-        """ Not Found: DELETE /blogs/<int:pk>/ """
+        """ Not Found: DELETE /articles/<int:pk>/ """
         headers = {
             'HTTP_AUTHORIZATION': 'Bearer ' + str(self.token),
         }
 
-        response = self.client.get('/blogs/1/', **headers)
+        response = self.client.get('/articles/1/', **headers)
         assert response.status_code == status.HTTP_404_NOT_FOUND

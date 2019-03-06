@@ -28,6 +28,7 @@ build_for_tags:
   before_script:
     - pip install pipenv
     - pipenv install --system --dev
+    - cd mymedia
 
 pytest:
   <<: *test_definition
@@ -39,10 +40,9 @@ pytest:
     POSTGRES_PASSWORD: custom_password
   script:
     - export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
-    - python manage.py collectstatic --noinput
     - pytest --cov-report=html --tb=line
   after_script:
-    - mv htmlcov/ public/
+    - mv mymedia/htmlcov/ public/
   artifacts:
     paths:
       - public
